@@ -1,0 +1,8 @@
+README.md
+terraform/nginx-server.key
+terraform/.terraform.lock.hcl
+terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.74.0/windows_amd64/terraform-provider-aws_v5.74.0_x5.exe
+terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.74.0/windows_amd64/LICENSE.txt
+terraform/terraform.tfstate.backup
+terraform/terraform.tfstate
+terraform/nginx-server.key.pub
