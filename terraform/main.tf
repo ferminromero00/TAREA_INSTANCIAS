@@ -120,7 +120,7 @@ resource "aws_security_group" "nginx-server-sg" {
 
 # Crea un bucket S3 con un nombre único
 resource "aws_s3_bucket" "bucket_web" {
-  bucket = "bucket-web-fermin-unique-string"  # Cambia este nombre a algo único
+  bucket = "bucket-web-fermin-unique-string"  
 }
 
 # Configuración de bloqueos de acceso público
