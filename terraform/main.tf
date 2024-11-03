@@ -120,14 +120,6 @@ resource "aws_security_group" "nginx-server-sg" {
   tags = { Name = "Grupo_de_Seguridad" }
 }
 
-# Crear el archivo ZIP del proyecto
-resource "null_resource" "zip_project_files" {
-  provisioner "local-exec" {
-    command = "C:\\Users\\fermin\\Desktop\\APLICACIONES\\7-Zip\\7z.exe a project.zip ."
-    working_dir = "C:\\Users\\fermin\\Desktop\\2DAW\\Despliegue de aplicaciones web\\RA3 AWS\\TAREA_INSTANCIAS\\Web"
-  }
-}
-
 # Crea un bucket S3
 resource "aws_s3_bucket" "bucket_web" {
   bucket = "bucket-web-fermin-12345"  # Cambia este nombre a algo único
