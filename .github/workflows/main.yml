@@ -39,7 +39,9 @@ jobs:
         run: terraform init
         working-directory: terraform  # Cambia esto a solo "terraform"
 
-      # Aplicar cambios con Terraform
+     # Aplicar cambios con Terraform
       - name: Terraform Apply
-        run: terraform apply -auto-approve
-        working-directory: terraform  # Cambia esto a solo "terraform" 
+        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        working-directory: terraform
+
+
