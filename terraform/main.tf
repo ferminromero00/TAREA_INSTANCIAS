@@ -1,7 +1,15 @@
 provider "aws" {
-  region  = "us-east-1"
-  profile = "default"
+  region     = var.region
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
 }
+
+variable "region" {
+  default = "us-east-1"  # Puedes definir la región que necesites
+}
+
+variable "aws_access_key" {}
+variable "aws_secret_key" {}
 
 # Crea una VPC con una subred pública y privada
 resource "aws_vpc" "example" {

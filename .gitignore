@@ -10,3 +10,4 @@ terraform/.terraform/providers/registry.terraform.io/hashicorp/null/3.2.3/window
 terraform/.terraform/providers/registry.terraform.io/hashicorp/null/3.2.3/windows_amd64/LICENSE.txt
 terraform/.terraform.tfstate.lock.info
 .gitignore
+terraform/mainLocal.tf

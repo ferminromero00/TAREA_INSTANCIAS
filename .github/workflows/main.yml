@@ -11,8 +11,6 @@ jobs:
 
     env:
       AWS_REGION: us-east-1
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TERRAFORM_VERSION: 1.9.7
 
     steps:
@@ -32,16 +30,22 @@ jobs:
 
       # Generar la documentación con JSDoc
       - name: Generate JSDoc documentation
-        run: jsdoc Web/js/index.js -d Web/docs
+        run: jsdoc Web/js/index.js -d Web/docs  # Genera la documentación en Web/docs
+
+      # Configurar las credenciales de AWS
+      - name: Configure AWS Credentials
+        run: |
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
       # Iniciar Terraform
       - name: Terraform Init
         run: terraform init
         working-directory: terraform  # Cambia esto a solo "terraform"
 
-     # Aplicar cambios con Terraform
+      # Aplicar cambios con Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        working-directory: terraform
-
-
+        working-directory: terraform  # Cambia esto a solo "terraform"
