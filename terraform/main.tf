@@ -1,15 +1,19 @@
-provider "aws" {
-  region     = var.region
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
-}
-
+# Declaración de variables
 variable "region" {
   default = "us-east-1"  # Puedes definir la región que necesites
 }
 
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
+variable "aws_session_token" {}
+
+# Configuración del proveedor AWS
+provider "aws" {
+  region      = var.region
+  access_key  = var.aws_access_key
+  secret_key  = var.aws_secret_key
+  token       = var.aws_session_token
+}
 
 # Crea una VPC con una subred pública y privada
 resource "aws_vpc" "example" {
@@ -18,14 +22,14 @@ resource "aws_vpc" "example" {
 }
 
 resource "aws_subnet" "public_subnet" {  
-  vpc_id = aws_vpc.example.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.example.id
+  cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
   tags = { Name = "PublicSubnet" }
 }
 
 resource "aws_subnet" "private_subnet" { 
-  vpc_id = aws_vpc.example.id
+  vpc_id     = aws_vpc.example.id
   cidr_block = "10.0.2.0/24"
   tags = { Name = "PrivateSubnet" }
 }
@@ -67,8 +71,8 @@ resource "aws_nat_gateway" "nat_gateway" {
 resource "aws_route_table" "private_route_table" {  
   vpc_id = aws_vpc.example.id
   route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.id
+    cidr_block      = "0.0.0.0/0"
+    nat_gateway_id  = aws_nat_gateway.nat_gateway.id
   }
   tags = { Name = "PrivateRouteTable" }
 }
@@ -160,9 +164,9 @@ EOF
 
 # Carga el archivo ZIP en el bucket S3
 resource "aws_s3_object" "project_zip" {
-  bucket = aws_s3_bucket.bucket_web.bucket
-  key    = "project.zip"
-  source = "../Web/project.zip"  # Ruta local al archivo ZIP
+  bucket      = aws_s3_bucket.bucket_web.bucket
+  key         = "project.zip"
+  source      = "../Web/project.zip"  # Ruta local al archivo ZIP
   depends_on = [null_resource.zip_project_files]  # Asegura que el ZIP se haya creado antes de subirlo
 }
 
@@ -173,7 +177,7 @@ resource "aws_instance" "ubuntu" {
 
   network_interface { 
     network_interface_id = aws_network_interface.nginx-interface.id
-    device_index = 0
+    device_index         = 0
   }
 
   key_name               = aws_key_pair.nginx-server-ssh.key_name
