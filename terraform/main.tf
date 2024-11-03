@@ -108,17 +108,67 @@ resource "aws_security_group" "nginx-server-sg" {
   tags = { Name = "Grupo_de_Seguridad" }
 }
 
+# Crear el archivo ZIP del proyecto
+resource "null_resource" "zip_project_files" {
+  provisioner "local-exec" {
+    command = "C:\\Users\\fermin\\Desktop\\APLICACIONES\\7-Zip\\7z.exe a project.zip ."
+    working_dir = "C:\\Users\\fermin\\Desktop\\2DAW\\Despliegue de aplicaciones web\\RA3 AWS\\TAREA_INSTANCIAS\\Web"
+  }
+}
+
+# Crea un bucket S3
+resource "aws_s3_bucket" "bucket_web" {
+  bucket = "bucket-web-fermin-12345"  # Cambia este nombre a algo único
+}
+
+# Configuración de bloqueos de acceso público
+resource "aws_s3_bucket_public_access_block" "bucket_web_access_block" {
+  bucket = aws_s3_bucket.bucket_web.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+# Política de acceso al bucket para permitir la lectura pública
+resource "aws_s3_bucket_policy" "bucket_web_policy" {
+  bucket = aws_s3_bucket.bucket_web.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "${aws_s3_bucket.bucket_web.arn}/*"
+    }
+  ]
+}
+EOF
+}
+
+# Carga el archivo ZIP en el bucket S3
+resource "aws_s3_object" "project_zip" {
+  bucket = aws_s3_bucket.bucket_web.bucket
+  key    = "project.zip"
+  source = "../Web/project.zip"  # Ruta local al archivo ZIP
+  depends_on = [null_resource.zip_project_files]  # Asegura que el ZIP se haya creado antes de subirlo
+}
+
 # Crea una instancia en la subred pública dentro de la VPC
 resource "aws_instance" "ubuntu" {
-    ami                    = "ami-0866a3c8686eaeeba"
-    instance_type          = "t2.micro"
+  ami                    = "ami-0866a3c8686eaeeba"
+  instance_type          = "t2.micro"
 
-    network_interface { 
-        network_interface_id = aws_network_interface.nginx-interface.id
-        device_index = 0
-    }
+  network_interface { 
+    network_interface_id = aws_network_interface.nginx-interface.id
+    device_index = 0
+  }
 
-    key_name               = aws_key_pair.nginx-server-ssh.key_name
+  key_name               = aws_key_pair.nginx-server-ssh.key_name
 
   user_data = <<-EOF
     #!/bin/bash
@@ -126,6 +176,15 @@ resource "aws_instance" "ubuntu" {
     sudo apt install nginx -y
     sudo systemctl enable nginx
     sudo systemctl start nginx
+
+    cd /var/www/html
+    sudo rm index.nginx-debian.html
+    sudo apt-get install wget -y
+    sudo snap install aws-cli --classic
+
+    wget https://bucket-web-fermin-12345.s3.us-east-1.amazonaws.com/project.zip
+    sudo apt install unzip
+    unzip -o project.zip
   EOF
 
   tags = { Name = "nginx-server" }

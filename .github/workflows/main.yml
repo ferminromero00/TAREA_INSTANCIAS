@@ -1,1 +1,36 @@
+name: Actualizar Web y Desplegarlo en AWS
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**/*.js'
+      - 'docs/**'
 
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Generate JSDoc
+      run: npx jsdoc -c jsdoc.json
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: tu-region-aws
+
+    - name: Deploy to AWS instance
+      run: |
+        scp -i ${{ secrets.AWS_SSH_KEY }} -r docs/* ec2-user@tu-instancia-aws:/ruta/en/tu/instancia/

@@ -6,3 +6,8 @@ terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.74.0/window
 terraform/terraform.tfstate.backup
 terraform/terraform.tfstate
 terraform/nginx-server.key.pub
+Jira/participantes.txt
+terraform/.terraform/providers/registry.terraform.io/hashicorp/null/3.2.3/windows_amd64/terraform-provider-null_v3.2.3_x5.exe
+terraform/.terraform/providers/registry.terraform.io/hashicorp/null/3.2.3/windows_amd64/LICENSE.txt
+terraform/.terraform.tfstate.lock.info
+.gitignore
