@@ -30,10 +30,6 @@ jobs:
       - name: Install JSDoc
         run: npm install -g jsdoc  # Instala JSDoc globalmente
 
-      # Cambiar al directorio Web
-      - name: Change directory to Web
-        run: cd ../../Web
-
       # Generar la documentación con JSDoc
       - name: Generate JSDoc documentation
         run: jsdoc js/index.js -d docs  # Ejecuta el comando para generar la documentación
