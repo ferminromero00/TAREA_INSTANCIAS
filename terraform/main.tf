@@ -180,7 +180,6 @@ resource "aws_instance" "ubuntu" {
     cd /var/www/html
     sudo rm index.nginx-debian.html
     sudo apt-get install wget -y
-    sudo snap install aws-cli --classic
 
     wget https://bucket-web-fermin-12345.s3.us-east-1.amazonaws.com/project.zip
     sudo apt install unzip

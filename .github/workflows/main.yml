@@ -20,32 +20,30 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      # Instalar Terraform
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
-
-      # Configurar JSDoc
+      # Instalar Node.js
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'  # Ajusta la versión de Node.js si es necesario
+          node-version: '20'  # Ajusta la versión de Node.js si es necesario
 
-      # Instalar dependencias de Node.js
-      - name: Install dependencies
-        run: npm install
+      # Instalar JSDoc
+      - name: Install JSDoc
+        run: npm install -g jsdoc  # Instala JSDoc globalmente
+
+      # Cambiar al directorio Web
+      - name: Change directory to Web
+        run: cd ../../Web
 
       # Generar la documentación con JSDoc
       - name: Generate JSDoc documentation
-        run: npm run jsdoc  # Asegúrate de tener este script en package.json
+        run: jsdoc js/index.js -d docs  # Ejecuta el comando para generar la documentación
 
       # Iniciar Terraform
       - name: Terraform Init
         run: terraform init
-        working-directory: path/to/terraform  # Cambia al directorio donde tengas `main.tf`
+        working-directory: ../../terraform  
 
       # Aplicar cambios con Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: path/to/terraform  # Cambia al directorio donde tengas `main.tf`
+        working-directory: ../../terraform 
