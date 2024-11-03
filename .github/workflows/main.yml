@@ -32,6 +32,14 @@ jobs:
       - name: Generate JSDoc documentation
         run: jsdoc Web/js/index.js -d Web/docs  # Genera la documentación en Web/docs
 
+      # Crear archivo ZIP del proyecto
+      - name: Create ZIP file
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zip
+          cd Web  # Cambia a la carpeta donde están los archivos que deseas comprimir
+          zip -r project.zip .  # Crea un ZIP de todo el contenido en la carpeta actual
+
       # Configurar las credenciales de AWS
       - name: Configure AWS Credentials
         run: |
@@ -44,9 +52,19 @@ jobs:
       # Iniciar Terraform
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform  # Cambia esto a solo "terraform"
+        working-directory: terraform
+
+    # Iniciar Terraform
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: terraform
+
 
       # Aplicar cambios con Terraform
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "aws_session_token=${{ secrets.AWS_SESSION_TOKEN }}"
-        working-directory: terraform  # Cambia esto a solo "terraform"
+      #- name: Terraform Apply
+      #  run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "aws_session_token=${{ secrets.AWS_SESSION_TOKEN }}"
+      #  working-directory: terraform
+
+      - name: Terraform Destroy
+        run: terraform destroy
+        working-directory: terraform
