@@ -83,11 +83,9 @@ resource "aws_route_table_association" "private_assoc" {
   route_table_id = aws_route_table.private_route_table.id
 }
 
-# Crea el par de claves SSH para la instancia
-resource "aws_key_pair" "nginx-server-ssh" {
-  key_name   = "nginx-server-ssh"
-  public_key = file("nginx-server.key.pub")
-  tags       = { Name = "nginx-server-ssh" }
+# Usa un par de claves SSH existente para la instancia
+data "aws_key_pair" "nginx-server-ssh" {
+  key_name = "nginx-server-ssh"
 }
 
 # Grupo de seguridad para permitir acceso SSH y HTTP
@@ -120,9 +118,9 @@ resource "aws_security_group" "nginx-server-sg" {
   tags = { Name = "Grupo_de_Seguridad" }
 }
 
-# Crea un bucket S3
+# Crea un bucket S3 con un nombre único
 resource "aws_s3_bucket" "bucket_web" {
-  bucket = "bucket-web-fermin-12345"  # Cambia este nombre a algo único
+  bucket = "bucket-web-fermin-unique-string"  # Cambia este nombre a algo único
 }
 
 # Configuración de bloqueos de acceso público
@@ -161,7 +159,6 @@ resource "aws_s3_object" "project_zip" {
   source = "../Web/project.zip"  # Ruta local al archivo ZIP
 }
 
-
 # Crea una instancia en la subred pública dentro de la VPC
 resource "aws_instance" "ubuntu" {
   ami                    = "ami-0866a3c8686eaeeba"
@@ -172,7 +169,7 @@ resource "aws_instance" "ubuntu" {
     device_index         = 0
   }
 
-  key_name               = aws_key_pair.nginx-server-ssh.key_name
+  key_name               = data.aws_key_pair.nginx-server-ssh.key_name
 
   user_data = <<-EOF
     #!/bin/bash
@@ -185,7 +182,7 @@ resource "aws_instance" "ubuntu" {
     sudo rm index.nginx-debian.html
     sudo apt-get install wget -y
 
-    wget https://bucket-web-fermin-12345.s3.us-east-1.amazonaws.com/project.zip
+    wget https://bucket-web-fermin-unique-string.s3.us-east-1.amazonaws.com/project.zip
     sudo apt install unzip
     unzip -o project.zip
   EOF
