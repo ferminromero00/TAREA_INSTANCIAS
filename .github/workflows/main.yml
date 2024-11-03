@@ -26,7 +26,7 @@ jobs:
 
       # Instalar JSDoc
       - name: Install JSDoc
-        run: npm install -g jsdoc  # Instala JSDoc globalmente
+        run: npm install -g jsdoc  # Instala JSDoc globalmentee
 
       # Generar la documentación con JSDoc
       - name: Generate JSDoc documentation
