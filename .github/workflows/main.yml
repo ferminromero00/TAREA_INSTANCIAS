@@ -37,9 +37,9 @@ jobs:
       # Iniciar Terraform
       - name: Terraform Init
         run: terraform init
-        working-directory: ../../terraform  
+        working-directory: terraform  # Cambia esto a solo "terraform"
 
       # Aplicar cambios con Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ../../terraform 
+        working-directory: terraform  # Cambia esto a solo "terraform" 
