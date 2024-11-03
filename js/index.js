@@ -4,7 +4,7 @@ const images = carousel.getElementsByTagName('img');
 let currentImage = 0;
 
 /**
- * Cambia la imagen actual del carrusel a la siguiente.
+ * Cambia la imagen actual del carrusel a la siguiente. Modficar comentario
  * Remueve la clase 'active' de la imagen actual y la aplica a la siguiente imagen.
  */
 function changeImage() {
