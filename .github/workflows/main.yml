@@ -1,0 +1,51 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main  # Ejecutar el flujo cuando haya commits en la rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      TERRAFORM_VERSION: 1.9.7
+
+    steps:
+      # Checkout del repositorio
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      # Instalar Terraform
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      # Configurar JSDoc
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Ajusta la versión de Node.js si es necesario
+
+      # Instalar dependencias de Node.js
+      - name: Install dependencies
+        run: npm install
+
+      # Generar la documentación con JSDoc
+      - name: Generate JSDoc documentation
+        run: npm run jsdoc  # Asegúrate de tener este script en package.json
+
+      # Iniciar Terraform
+      - name: Terraform Init
+        run: terraform init
+        working-directory: path/to/terraform  # Cambia al directorio donde tengas `main.tf`
+
+      # Aplicar cambios con Terraform
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: path/to/terraform  # Cambia al directorio donde tengas `main.tf`
