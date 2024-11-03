@@ -32,7 +32,7 @@ jobs:
 
       # Generar la documentación con JSDoc
       - name: Generate JSDoc documentation
-        run: jsdoc js/index.js -d docs  # Ejecuta el comando para generar la documentación
+        run: jsdoc Web/js/index.js -d Web/docs
 
       # Iniciar Terraform
       - name: Terraform Init
