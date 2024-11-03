@@ -83,11 +83,6 @@ resource "aws_route_table_association" "private_assoc" {
   route_table_id = aws_route_table.private_route_table.id
 }
 
-# Usa un par de claves SSH existente para la instancia
-data "aws_key_pair" "nginx-server-ssh" {
-  key_name = "nginx-server-ssh"
-}
-
 # Grupo de seguridad para permitir acceso SSH y HTTP
 resource "aws_security_group" "nginx-server-sg" {
   vpc_id      = aws_vpc.example.id
@@ -163,13 +158,6 @@ resource "aws_s3_object" "project_zip" {
 resource "aws_instance" "ubuntu" {
   ami                    = "ami-0866a3c8686eaeeba"
   instance_type          = "t2.micro"
-
-  network_interface { 
-    network_interface_id = aws_network_interface.nginx-interface.id
-    device_index         = 0
-  }
-
-  key_name               = data.aws_key_pair.nginx-server-ssh.key_name
 
   user_data = <<-EOF
     #!/bin/bash
