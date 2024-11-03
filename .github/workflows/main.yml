@@ -26,7 +26,7 @@ jobs:
 
       # Instalar JSDoc
       - name: Install JSDoc
-        run: npm install -g jsdoc  # Instala JSDoc globalmentee
+        run: npm install -g jsdoc  # Instala JSDoc globalmente
 
       # Generar la documentación con JSDoc
       - name: Generate JSDoc documentation
@@ -39,6 +39,7 @@ jobs:
           echo "[default]" > ~/.aws/credentials
           echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
           echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "aws_session_token=${{ secrets.AWS_SESSION_TOKEN }}" >> ~/.aws/credentials
 
       # Iniciar Terraform
       - name: Terraform Init
@@ -47,5 +48,5 @@ jobs:
 
       # Aplicar cambios con Terraform
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+        run: terraform apply -auto-approve -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "aws_session_token=${{ secrets.AWS_SESSION_TOKEN }}"
         working-directory: terraform  # Cambia esto a solo "terraform"
