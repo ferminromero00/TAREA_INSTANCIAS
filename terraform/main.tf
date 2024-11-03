@@ -156,11 +156,11 @@ EOF
 
 # Carga el archivo ZIP en el bucket S3
 resource "aws_s3_object" "project_zip" {
-  bucket      = aws_s3_bucket.bucket_web.bucket
-  key         = "project.zip"
-  source      = "../Web/project.zip"  # Ruta local al archivo ZIP
-  depends_on = [null_resource.zip_project_files]  # Asegura que el ZIP se haya creado antes de subirlo
+  bucket = aws_s3_bucket.bucket_web.bucket
+  key    = "project.zip"
+  source = "../Web/project.zip"  # Ruta local al archivo ZIP
 }
+
 
 # Crea una instancia en la subred pública dentro de la VPC
 resource "aws_instance" "ubuntu" {
