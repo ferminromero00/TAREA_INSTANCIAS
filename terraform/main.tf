@@ -159,6 +159,11 @@ resource "aws_instance" "ubuntu" {
   ami                    = "ami-0866a3c8686eaeeba"
   instance_type          = "t2.micro"
 
+  network_interface {
+    network_interface_id = aws_network_interface.nginx-interface.id
+    device_index = 0
+  }
+
   user_data = <<-EOF
     #!/bin/bash
     sudo apt update
