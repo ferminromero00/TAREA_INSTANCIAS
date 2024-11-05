@@ -151,7 +151,7 @@ EOF
 resource "aws_s3_object" "project_zip" {
   bucket = aws_s3_bucket.bucket_web.bucket
   key    = "project.zip"
-  source = "../Web/project.zip"  # Ruta local al archivo ZIP
+  source = "../Web/project.zip"  
 }
 
 # Crea una instancia en la subred pública dentro de la VPC
